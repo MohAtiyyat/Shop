@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+Route::controller(\App\Http\Controllers\AuthController::class)->prefix('user')->group(function () {
+
+    Route::middleware('auth:sanctum')->group(function () {
+
+        Route::get('/', 'user');
+        Route::post('/logout', 'logout');
+    });
+
+    Route::post('/login', 'login');
+    Route::post('/register', 'register');
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::controller(\App\Http\Controllers\CartsController::class)->prefix('cart')->group(function () {
+
+        Route::get('/', 'index');
+        Route::put('/update', 'update');
+    });
+
+
+    Route::controller(\App\Http\Controllers\ProductsController::class)->prefix('product')->group(function () {
+
+        Route::get('/', 'index');
+        Route::post('/create', 'store');
+        Route::put('{id}/update', 'update');
+        Route::delete('{id}/delete', 'destroy');
+    });
+});
+
+
