@@ -1,11 +1,11 @@
 <script >
-import AuthLayout from "@/layout/AuthLayout.vue";
+import FormLayout from "@/layout/FormLayout.vue";
 import axios from "axios";
 import Layout from "@/layout/Layout.vue";
 
 export default {
   name:'createProduct',
-  components: {Layout, AuthLayout},
+  components: {Layout, FormLayout},
   created() {
     this.getProduct();
   },
@@ -95,7 +95,7 @@ export default {
 
 <template>
   <Layout>
-  <AuthLayout name="login">
+  <FormLayout name="login">
     <template #formBody>
       <form class="space-y-6">
         <div>
@@ -116,7 +116,7 @@ export default {
         </div>
           <div class="mt-2">
             <p id="productPrice" class="block w-full rounded-md py-1.5 text-gray-900 font-medium focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-              ${{product.price}}
+              ${{product.price/100}}
             </p>
           </div>
 
@@ -131,7 +131,7 @@ export default {
         </div>
       </form>
     </template>
-  </AuthLayout>
+  </FormLayout>
   </Layout>
 </template>
 

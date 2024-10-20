@@ -1,10 +1,10 @@
 <script >
-import AuthLayout from "@/layout/AuthLayout.vue";
+import FormLayout from "@/layout/FormLayout.vue";
 import axios from "axios";
 
 export default {
   name:"createProduct",
-  components: {AuthLayout},
+  components: {FormLayout},
   data(){
     return {
       formData: {
@@ -50,7 +50,7 @@ export default {
 </script>
 
 <template>
-  <AuthLayout name="login">
+  <FormLayout name="login">
     <template #formBody>
       <form class="space-y-6">
         <div>
@@ -73,7 +73,7 @@ export default {
         </div>
         <div>
           <label for="productPrice" class="block text-sm font-medium leading-6 text-gray-900">Product price</label>
-          <h6 class="block text-sm font-light leading-6 text-gray-600">without dot</h6>
+          <h6 class="block text-sm font-light leading-6 text-gray-600">In cents</h6>
           <div class="mt-2">
             <input id="productPrice" name="productPrice" type="number" required="" v-model="formData.price"
                    class="block w-1/3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
@@ -86,7 +86,7 @@ export default {
         </div>
       </form>
     </template>
-  </AuthLayout>
+  </FormLayout>
 
 </template>
 

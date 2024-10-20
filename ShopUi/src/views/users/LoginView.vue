@@ -1,5 +1,5 @@
 <script >
-import AuthLayout from "@/layout/AuthLayout.vue";
+import AuthLayout from "@/layout/FormLayout.vue";
 import axios from "axios";
 
 export default {

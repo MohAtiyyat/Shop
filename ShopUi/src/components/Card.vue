@@ -12,7 +12,7 @@
         <div class="flex justify-between items-center pb-3 px-4">
           <div>
             <div class="text-gray-800 text-lg">
-              <span class="font-medium">{{productPrice}}</span>
+              <span class="font-medium">${{productPrice/100}}</span>
             </div>
           </div>
           <div>

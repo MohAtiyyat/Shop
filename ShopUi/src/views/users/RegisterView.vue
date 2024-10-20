@@ -47,7 +47,7 @@
 </template>
 
 <script >
-import AuthLayout from "@/layout/AuthLayout.vue";
+import AuthLayout from "@/layout/FormLayout.vue";
 import { required, email, minLength, sameAs } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
 import axios from "axios";

@@ -1,7 +1,7 @@
 <script >
-import AuthLayout from "@/layout/AuthLayout.vue";
 import axios from "axios";
 import productView from "./ProductView.vue";
+import FormLayout from "@/layout/FormLayout.vue"
 
 export default {
   name:"UpdateProductView",
@@ -10,7 +10,7 @@ export default {
       return productView
     }
   },
-  components: {AuthLayout},
+  components: {FormLayout},
   data(){
     return {
       product:[],
@@ -36,12 +36,10 @@ export default {
           'Content-Type': 'application/json',
         },
       };
-      console.log(config)
       axios.get(`http://127.0.0.1:8000/api/product/${id}`,
           config
       ).then((response) => {
         this.formData = response.data;
-        alert("product edited")
       }).catch(errors => {
         errors = errors.response.data.errors;
         for (const error in errors) {
@@ -50,21 +48,21 @@ export default {
       });
     },
     save() {
+      const pathArray = window.location.pathname.split('/');
+      const id = pathArray[2]
       const config = {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token').slice(1,-1)}`,
           'Content-Type': 'application/json',
         },
       };
-      console.log(config)
-      axios.post("http://127.0.0.1:8000/api/product/{formData.id}/update",
+      axios.put(`http://127.0.0.1:8000/api/product/${id}/update`,
           this.formData,
           config
       )
-          .then((response) => {
-            console.log(response)
-            alert("product edited")
+          .then(() => {
             window.location.href = '/home';
+            alert("product edited")
           }).catch(errors => {
         errors = errors.response.data.errors;
         for (const error in errors) {
@@ -82,7 +80,7 @@ export default {
 </script>
 
 <template>
-  <AuthLayout name="login">
+  <FormLayout name="login">
     <template #formBody>
       <form class="space-y-6">
         <div>
@@ -105,7 +103,7 @@ export default {
         </div>
         <div>
           <label for="productPrice" class="block text-sm font-medium leading-6 text-gray-900">Product price</label>
-          <h6 class="block text-sm font-light leading-6 text-gray-600">without dot</h6>
+          <h6 class="block text-sm font-light leading-6 text-gray-600">In cents</h6>
           <div class="mt-2">
             <input id="productPrice" name="productPrice" type="number" required="" v-model="formData.price" min="1"
                    class="block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
@@ -118,7 +116,7 @@ export default {
         </div>
       </form>
     </template>
-  </AuthLayout>
+  </FormLayout>
 
 </template>
 
