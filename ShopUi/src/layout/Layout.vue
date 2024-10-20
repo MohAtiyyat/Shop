@@ -21,7 +21,7 @@
                 {{item.name }}</RouterLink>
               </div>
               <div v-if="user[0] !=null" >
-              Welcome, {{user[0]}} | <button @click="logout()">Logout</button>
+              Welcome, {{user[0].slice(1,-1)}} | <button @click="logout()">Logout</button>
               </div>
             </div>
           </div>
