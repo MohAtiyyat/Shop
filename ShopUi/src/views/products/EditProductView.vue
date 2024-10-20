@@ -41,6 +41,7 @@ export default {
           config
       ).then((response) => {
         this.formData = response.data;
+        alert("product edited")
       }).catch(errors => {
         errors = errors.response.data.errors;
         for (const error in errors) {
