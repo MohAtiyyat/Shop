@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Http\Requests\StoreProductsRequest;
 use App\Http\Requests\UpdateProductsRequest;
+use App\Models\User;
+use http\Env\Request;
 use Illuminate\Http\JsonResponse;
+use function Laravel\Prompts\error;
 
 class ProductsController extends Controller
 {
@@ -14,7 +17,11 @@ class ProductsController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json(Product::paginate(10));
+        try {
+            return response()->json(Product::paginate(10));
+        }catch (\Exception $e){
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 
 
@@ -23,10 +30,15 @@ class ProductsController extends Controller
      */
     public function store(StoreProductsRequest $request) : JsonResponse
     {
-        Product::create($request->all());
+        try {
+
+        Product::create($request->validated());
         return response()->json([
             'message' => 'Product created successfully.', 201
         ]);
+        }catch (\Exception $e){
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -34,7 +46,11 @@ class ProductsController extends Controller
      */
     public function show($id): JsonResponse
     {
-        return response()->json(Product::find($id));
+        try {
+            return response()->json(Product::find($id));
+        }catch (\Exception $e){
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -42,7 +58,11 @@ class ProductsController extends Controller
      */
     public function edit(Product $product): JsonResponse
     {
-        return response()->json($product);
+        try {
+            return response()->json($product);
+            }catch (\Exception $e){
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -50,21 +70,33 @@ class ProductsController extends Controller
      */
     public function update(UpdateProductsRequest $request,$id): JsonResponse
     {
-        $product = Product::find($id);
-        $product->update($request->all());
-        return response()->json([
-            'message' => 'Product updated successfully.', 201
-        ]);
+        try {
+            $product = Product::find($id);
+            $product->update($request->validated());
+            return response()->json([
+                'message' => 'Product updated successfully.', 201
+            ]);
+        }
+        catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id): JsonResponse
+    public function destroy($id, Request $request): JsonResponse
     {
-        Product::destroy($id);
-        return response()->json([
-            'message' => 'Product deleted successfully.', 201
-        ]);
+        try {
+            $token = $request->getHeader('token');
+            User::where();
+            Product::deleted($id);
+            return response()->json([
+                'message' => 'Product deleted successfully.', 201
+            ]);
+        }
+        catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="select-none mb-6 w-full">
+  <div class="select-none mb-20 w-full">
     <div class="px-4 -mt-16 relative">
       <div class="bg-white rounded-lg shadow-lg border">
         <div class="p-5">
