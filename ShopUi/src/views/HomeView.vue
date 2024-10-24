@@ -43,6 +43,7 @@ export default {
         this.products = response.data.data
         this.totalPages = response.data.total/response.data.per_page>0? Math.round(response.data.total/response.data.per_page) : 1 ;
         this.currentPage = page;
+        console.log(this.user.role)
       })
           .catch(() =>{
             this.errorMsg = 'Error retrieving data'

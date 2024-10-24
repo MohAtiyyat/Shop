@@ -79,6 +79,7 @@ export default {
             localStorage.setItem('userName', response.data.userName);
             localStorage.setItem('userId', JSON.stringify(response.data.userId));
             localStorage.setItem('userEmail', response.data.userEmail);
+            localStorage.setItem('role', response.data.role)
             window.location.href = '/home';
           }).catch(errors => {
         errors = errors.response.data.errors;
