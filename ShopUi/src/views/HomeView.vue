@@ -19,9 +19,13 @@ export default {
       errorMsg:'',
       currentPage: 1,
       totalPages: 0,
-      user:[localStorage.getItem('userId'),localStorage.getItem('userName'), localStorage.getItem('userEmail')],
       rqPage:'',
-      search:''
+      search:'',
+      user:{
+        id:localStorage.getItem('userId'),
+        name:localStorage.getItem('userName'),
+        email:localStorage.getItem('userEmail'),
+        role:localStorage.getItem('role')},
     }
   },
   watch:{
@@ -63,8 +67,8 @@ export default {
 
 <template>
   <Layout>
-    <template #extra v-if="user[0]!= null">
-      <router-link  to="product/create">
+    <template #extra>
+      <router-link  to="product/create" v-if="user.role === 'admin'">
         <button class="justify-center h-4">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
