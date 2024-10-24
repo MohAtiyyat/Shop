@@ -75,10 +75,10 @@ export default {
       )
           .then((response) => {
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token;
-            localStorage.setItem('token', JSON.stringify(response.data.token));
-            localStorage.setItem('userName', JSON.stringify(response.data.userName));
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('userName', response.data.userName);
             localStorage.setItem('userId', JSON.stringify(response.data.userId));
-            localStorage.setItem('userEmail', JSON.stringify(response.data.userEmail));
+            localStorage.setItem('userEmail', response.data.userEmail);
             window.location.href = '/home';
           }).catch(errors => {
         errors = errors.response.data.errors;
