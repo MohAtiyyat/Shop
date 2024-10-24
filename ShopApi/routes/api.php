@@ -14,6 +14,7 @@ Route::controller(\App\Http\Controllers\AuthController::class)->prefix('user')->
 });
 
 Route::controller(\App\Http\Controllers\ProductsController::class)->prefix('product')->group(function () {
+    route::get('/search', 'search');
     Route::get('/', 'index');
     Route::get('/{id}', 'show');
     });
@@ -30,7 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(\App\Http\Controllers\ProductsController::class)->prefix('product')->group(function () {
         Route::post('/create', 'store');
         Route::put('{id}/update', 'update');
-        Route::delete('{id}/delete', 'destroy');
+        Route::delete('{id}/delete', 'delete');
     });
 });
 

@@ -20,7 +20,7 @@ export default {
     getProducts(){
       const config = {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token').slice(1,-1)}`,
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json',
         },
       };
@@ -38,7 +38,7 @@ export default {
     },
     removeFromCart(){const config = {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token').slice(1,-1)}`,
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': 'application/json',
       },
     };

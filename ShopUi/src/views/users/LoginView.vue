@@ -11,7 +11,7 @@ export default {
         'email': '',
         'password': ''
       },
-      errorMsg:'',
+      errors:[],
       redirect:'/home'
     }
   },
@@ -23,15 +23,17 @@ export default {
             .then((response) => {
               axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token;
 
-              localStorage.setItem( 'token', JSON.stringify(response.data.token));
-              localStorage.setItem('userName', JSON.stringify(response.data.userName));
+              localStorage.setItem( 'token', response.data.token);
+              localStorage.setItem('userName', response.data.userName);
               localStorage.setItem('userId', JSON.stringify(response.data.userId));
-              localStorage.setItem('userEmail', JSON.stringify(response.data.userEmail));
+              localStorage.setItem('userEmail', response.data.userEmail);
+              localStorage.setItem('role',response.data.role)
               window.location.href = '/home';
             }).catch(errors => {
-          errors = errors.response.data.errors;
-          for (const error in errors) {
-            console.log(errors[error])
+              const errs = errors.response.data.errors;
+          for (const err in errs) {
+              this.errors = err;
+            console.log(err);
           }
         });
     }
@@ -49,18 +51,21 @@ export default {
         <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
         <div class="mt-2">
           <input id="email" name="email" type="email" autocomplete="email" required="" v-model="formData.email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert" v-if="errors.email">
+            <span class="block sm:inline">{{errors.email}}</span>
+          </div>
         </div>
       </div>
 
       <div>
         <div class="flex items-center justify-between">
           <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
-<!--          <div class="text-sm">-->
-<!--            <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>-->
-<!--          </div>-->
         </div>
         <div class="mt-2">
           <input id="password" name="password" type="password" autocomplete="current-password" required="" v-model="formData.password" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert" v-if="errors.password">
+            <span class="block sm:inline">{{errors.password}}</span>
+          </div>
         </div>
       </div>
 

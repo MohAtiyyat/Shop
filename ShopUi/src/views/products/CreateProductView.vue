@@ -20,7 +20,7 @@ export default {
     create() {
       const config = {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token').slice(1,-1)}`,
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json',
         },
       };

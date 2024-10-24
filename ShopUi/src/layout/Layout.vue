@@ -21,7 +21,7 @@
                 {{item.name }}</RouterLink>
               </div>
               <div v-if="user[0] !=null" >
-              Welcome, {{user[0].slice(1,-1)}} | <button @click="logout()">Logout</button>
+                Welcome, <RouterLink to="/user/profile">{{user[0]}}</RouterLink> | <button @click="logout()">Logout</button>
               </div>
             </div>
           </div>
@@ -29,9 +29,9 @@
       </div>
     </Disclosure>
 
-    <header class="bg-white shadow">
+    <header class="bg-white ">
       <div class="mx-auto  px-4 py-6 sm:px-6 lg:px-8">
-        <slot name="createBtn"></slot>
+        <slot name="extra"></slot>
         <h1 class="text-3xl font-bold tracking-tight text-gray-900"></h1>
       </div>
     </header>
@@ -45,6 +45,7 @@
 
 <script setup>
 import { Disclosure } from '@headlessui/vue'
+import SearchBar from "@/components/SearchBar.vue";
 const user = [localStorage.getItem('userName'),
 localStorage.getItem('userId'),
 localStorage.getItem('userEmail')]

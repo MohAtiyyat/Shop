@@ -1,10 +1,10 @@
 <script >
-import AuthLayout from "@/layout/AuthLayout.vue";
+import FormLayout from "@/layout/FormLayout.vue";
 import axios from "axios";
 
 export default {
   name:'createProduct',
-  components: {AuthLayout},
+  components: {FormLayout},
   data(){
     return{
       formData: {
@@ -37,7 +37,7 @@ export default {
 </script>
 
 <template>
-  <AuthLayout name="login">
+  <FormLayout name="login">
     <template #formBody>
       <form class="space-y-6"    >
         <div>
@@ -68,7 +68,7 @@ export default {
         </div>
       </form>
     </template>
-  </AuthLayout>
+  </FormLayout>
 
 </template>
 

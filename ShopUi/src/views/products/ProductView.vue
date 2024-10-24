@@ -16,7 +16,11 @@ export default {
       product:[],
       errorMsg: [],
       pstErrMsg:[],
-      user:[localStorage.getItem('userId'),localStorage.getItem('userName'), localStorage.getItem('userEmail')],
+      user:{
+        id:localStorage.getItem('userId'),
+        name:localStorage.getItem('userName'),
+        email:localStorage.getItem('userEmail'),
+        role:localStorage.getItem('role')},
     }
   },
   methods: {
@@ -44,7 +48,7 @@ export default {
     addToCart(){
       const config = {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token').slice(1,-1)}`,
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json',
         },
       };
@@ -71,15 +75,16 @@ export default {
       console.log(id);
       const config = {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token').slice(1,-1)}`,
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json',
         },
       };
       console.log(config)
       axios.delete(`http://127.0.0.1:8000/api/product/${id}/delete`,
           config
-      ).then(() => {
-        alert("Product deleted")
+      ).then((res) => {
+        alert(res.data.message)
+        console.log(res.data)
         window.history.back();
       }).catch(errors => {
         errors = errors.response.data.errors;
@@ -121,12 +126,12 @@ export default {
           </div>
 
         <div class="flex md:space-x-32">
-          <button type="submit" @click.prevent="addToCart()" v-show="user[0] != null" class="flex w-1/3 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-200 shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add to cart</button>
+          <button type="submit" @click.prevent="addToCart()" v-show="user.id != null" class="flex w-1/3 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-200 shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add to cart</button>
           <button type="submit" @click.prevent="back()" class="flex w-1/3 justify-center rounded-md bg-gray-200 px-3 py-1.5 text-sm font-semibold leading-6 text-indigo-600 shadow-sm hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Back</button>
         </div>
         <div class="flex md:space-x-52">
-          <router-link :to="{ path: product.id + '/edit' }" v-show="user[0] != null" tag="button" class="lex  justify-center rounded-md bg-green-500 text-gray-200 px-3 py-1.5">Edit </router-link>
-          <button @click.prevent="deleteProduct()" v-show="user[0] != null" class="flex  justify-center rounded-md bg-red-700 text-gray-200 px-3 py-1.5">Delete</button>
+          <router-link :to="{ path: product.id + '/edit' }" v-show="user.role ==='admin'" tag="button" class="lex  justify-center rounded-md bg-green-500 text-gray-200 px-3 py-1.5">Edit </router-link>
+          <button @click.prevent="deleteProduct()" v-show="user.role ==='admin'" class="flex  justify-center rounded-md bg-red-700 text-gray-200 px-3 py-1.5">Delete</button>
 
         </div>
       </form>

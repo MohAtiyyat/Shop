@@ -7,6 +7,8 @@ import ProductView from "@/views/products/ProductView.vue";
 import createProductView from "@/views/products/CreateProductView.vue";
 import editProductView from "@/views/products/EditProductView.vue";
 import NotFound from "@/views/NotFound.vue";
+import SearchView from "@/views/SearchView.vue";
+import UserView from "@/views/users/UserView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,7 +22,9 @@ const router = createRouter({
         name:'user',
         children:[
             {path:'login', name:'login', component: LoginView},
-        {path:'register', name:'register', component: RegisterView}]
+            {path:'register', name:'register', component: RegisterView},
+            {path:'profile', name:'profile', component: UserView}
+        ]
       },
           {
               path:'/cart',
@@ -35,7 +39,11 @@ const router = createRouter({
                   {path: ':id/edit', name: 'editeProduct', component: editProductView},
                   {path:':id',name:'products', component: ProductView}
               ]
-          },{
+          },
+          {
+            path: "search", name:'search', component: SearchView
+          },
+          {
               path: "/:notFound",
               component: NotFound,
           },
