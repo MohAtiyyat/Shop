@@ -22,10 +22,10 @@ class DeleteProductRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules($id): array
+    public function rules(): array
     {
         return [
-            $id5y3
+            'id' => 'exists:products,id'
         ];
     }
 }

@@ -69,9 +69,6 @@ export default {
       window.history.back();
     },
     async deleteProduct(){
-      const pathArray = window.location.pathname.split('/');
-      const id = pathArray[2]
-      console.log(id);
       const config = {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -79,7 +76,7 @@ export default {
         },
       };
       console.log(config)
-      await axios.delete(`/product/${id}/delete`,
+      await axios.delete(`/product/${this.product.id}/delete`,
           config
       ).then((res) => {
         alert(res.data.message)

@@ -85,18 +85,20 @@ class ProductsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function delete(DeleteProductRequest $request): JsonResponse
+    public function delete($id): JsonResponse
     {
-        try {
-                $id = $request->validated('id');
+        if(auth()->user()->hasRole('admin')) {
+            try {
                 $product = Product::find($id);
                 $product->delete();
                 return response()->json([
-                    'message' => 'Product deleted successfully.', 201
+                    'message' => 'Product deleted successfully.'
                 ]);
-        }catch (\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()]);
+            }
         }
+        return response()->json(['error' => 'You are not authorized to delete this product.'], 403);
     }
     public function search(ProductsSearchRequest $request): JsonResponse
     {

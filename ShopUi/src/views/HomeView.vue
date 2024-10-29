@@ -91,7 +91,7 @@ export default {
       </form>
     </template>
     <div class="mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4"  >
-      <Card v-for="product in products" :key="product.id" :product-id="product.id" :productName="product.name" :productPrice="product.price"/>
+      <Card v-for="product in products" :key="product.id" :productId="product.id" :productName="product.name" :productPrice="product.price"/>
     </div>
     <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
       <div v-show=" (totalPages>1)">
