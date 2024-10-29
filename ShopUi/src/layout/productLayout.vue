@@ -16,21 +16,6 @@ export default {
     }
   },
   methods:{
-    save() {
-      axios.post("http://127.0.0.1:8000/api/product/create",
-          this.formData
-      )
-          .then((response) => {
-            alert("product added")
-            window.location.href = '/home';
-          }).catch(errors => {
-        errors = errors.response.data.errors;
-        for (const error in errors) {
-          console.log(errors[error])
-        }
-      });
-    }
-
   }
 }
 

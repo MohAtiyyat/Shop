@@ -38,12 +38,11 @@ export default {
   },
   methods:{
     async getProducts(page = this.currentPage){
-      await axios.get(`http://127.0.0.1:8000/api/product?page=${page}`).
+      await axios.get(`/product?page=${page}`).
       then((response) =>{
         this.products = response.data.data
         this.totalPages = response.data.total/response.data.per_page>0? Math.round(response.data.total/response.data.per_page) : 1 ;
         this.currentPage = page;
-        console.log(this.user.role)
       })
           .catch(() =>{
             this.errorMsg = 'Error retrieving data'

@@ -33,7 +33,7 @@ export default {
         },
       };
       console.log(config)
-      axios.get(`http://127.0.0.1:8000/api/product/${id}`,
+      axios.get(`/product/${id}`,
           config
       )
           .then((response) => {
@@ -52,7 +52,7 @@ export default {
           'Content-Type': 'application/json',
         },
       };
-      axios.put('http://127.0.0.1:8000/api/cart/update',
+      axios.put('/cart/update',
           {'product_id': `${this.product.id}`,
           'quantity': 1},
           config
@@ -80,7 +80,7 @@ export default {
         },
       };
       console.log(config)
-      axios.delete(`http://127.0.0.1:8000/api/product/${id}/delete`,
+      axios.delete(`/product/${id}/delete`,
           config
       ).then((res) => {
         alert(res.data.message)
@@ -105,7 +105,7 @@ export default {
       <form class="space-y-6">
         <div>
           <div class="mt-2">
-            <h1 class="block font-bold text-5xl leading-6 text-gray-900">{{product.name}}</h1>
+            <h1 class="block font-bold text-3xl text-center  leading-6 text-gray-900">{{product.name}}</h1>
           </div>
         </div>
 

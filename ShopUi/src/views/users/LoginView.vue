@@ -1,23 +1,27 @@
 <script >
 import AuthLayout from "@/layout/FormLayout.vue";
 import axios from "axios";
+import Layout from "@/layout/Layout.vue";
 
 export default {
   name:'userLogin',
-  components: {AuthLayout},
+  components: {Layout, AuthLayout},
   data(){
     return{
       formData: {
         'email': '',
         'password': ''
       },
-      errors:[],
+      errors:{
+        'email': null,
+        'password': null,
+      },
       redirect:'/home'
     }
   },
   methods:{
     login() {
-        axios.post("http://127.0.0.1:8000/api/user/login",
+        axios.post("/user/login",
             this.formData
         )
             .then((response) => {
@@ -29,13 +33,25 @@ export default {
               localStorage.setItem('userEmail', response.data.userEmail);
               localStorage.setItem('role',response.data.role)
               window.location.href = '/home';
-            }).catch(errors => {
-              const errs = errors.response.data.errors;
-          for (const err in errs) {
-              this.errors = err;
-            console.log(err);
-          }
-        });
+            }).catch(errs => {
+              if(errs.status === 401){
+                this.errors.email = "Wrong Email/Password"
+              }
+              else if(errs.status === 422) {
+                const errors = errs.response.data.errors;
+                if(errors.email !== undefined)
+                {
+                  this.errors.email = errors.email[0];
+                }
+                if(errors.password !== undefined)
+                {
+                  this.errors.password = errors.password[0];
+                }
+              }
+              else {
+                console.log(errs)
+              }
+          });
     }
 
   }
@@ -44,6 +60,7 @@ export default {
 </script>
 
 <template>
+  <Layout>
   <AuthLayout name="login">
     <template #formBody>
       <form class="space-y-6"    >
@@ -80,7 +97,7 @@ export default {
       </form>
     </template>
   </AuthLayout>
-
+  </Layout>
 </template>
 
 <style scoped>

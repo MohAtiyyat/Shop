@@ -4,9 +4,9 @@
       <div class="bg-white rounded-lg shadow-lg border">
         <div class="p-5">
 
-          <a class="text-gray-800 block mt-2 truncate hover:underline font-medium text-lg" href="#">
+          <router-link :to="{ path: '/product/' + productId }" class="text-gray-800 block mt-2 truncate hover:underline font-medium text-lg" >
             {{productName}}
-          </a>
+          </router-link>
         </div>
 
         <div class="flex justify-between items-center pb-3 px-4">

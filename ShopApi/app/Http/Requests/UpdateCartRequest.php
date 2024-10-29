@@ -11,7 +11,10 @@ class UpdateCartRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check();
+        if(auth()->user()->hasRole('admin')||auth()->user()->hasRole('user')) {
+            return true;
+        }
+        return false;
     }
 
     /**

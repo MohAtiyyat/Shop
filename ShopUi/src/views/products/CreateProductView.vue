@@ -1,10 +1,11 @@
 <script >
 import FormLayout from "@/layout/FormLayout.vue";
+import Layout from "@/layout/Layout.vue";
 import axios from "axios";
 
 export default {
   name:"createProduct",
-  components: {FormLayout},
+  components: {FormLayout, Layout},
   data(){
     return {
       formData: {
@@ -12,7 +13,11 @@ export default {
         'description': '',
         'price':''
       },
-      errorMsg: '',
+      errors:{
+        'name':null,
+        'description':null,
+        'price':null
+      },
       redirect: '/home'
     }
   },
@@ -25,7 +30,7 @@ export default {
         },
       };
       console.log(config)
-      axios.post("http://127.0.0.1:8000/api/product/create",
+      axios.post("/product/create",
           this.formData,
           config
       )
@@ -33,11 +38,22 @@ export default {
             console.log(response)
             alert("product added")
             window.location.href = '/home';
-          }).catch(errors => {
-        errors = errors.response.data.errors;
-        for (const error in errors) {
-          console.log(errors[error])
-        }
+          }).catch(errs => {
+            if(errs.status === 422) {
+              const errors = errs.response.data.errors;
+              if (errors.name !== undefined) {
+                this.errors.name = errors.name[0];
+              }
+              if (errors.description !== undefined) {
+                this.errors.description = errors.description[0];
+              }
+              if (errors.price !== undefined) {
+                this.errors.price = errors.price[0];
+              }
+            }
+            else {
+              console.log(errs)
+            }
       });
     },
     cancel(){
@@ -50,6 +66,7 @@ export default {
 </script>
 
 <template>
+  <Layout>
   <FormLayout name="login">
     <template #formBody>
       <form class="space-y-6">
@@ -58,6 +75,9 @@ export default {
           <div class="mt-2">
             <input id="productName" name="productName" type="text" required="" v-model="formData.name"
                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert" v-if="errors.name">
+              <span class="block sm:inline">{{errors.name}}</span>
+            </div>
           </div>
         </div>
 
@@ -69,6 +89,9 @@ export default {
           <div class="mt-2">
             <textarea id="productDescription" name="productDescription" v-model="formData.description"
                       class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert" v-if="errors.description">
+              <span class="block sm:inline">{{errors.description}}</span>
+            </div>
           </div>
         </div>
         <div>
@@ -77,6 +100,9 @@ export default {
           <div class="mt-2">
             <input id="productPrice" name="productPrice" type="number" required="" v-model="formData.price"
                    class="block w-1/3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert" v-if="errors.price">
+              <span class="block sm:inline">{{errors.price}}</span>
+            </div>
           </div>
         </div>
 
@@ -87,7 +113,7 @@ export default {
       </form>
     </template>
   </FormLayout>
-
+  </Layout>
 </template>
 
 <style scoped>

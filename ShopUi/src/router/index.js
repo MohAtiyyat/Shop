@@ -14,41 +14,36 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [{
       path: '/',
-      children:[{
-        path:'', name:'home', component:HomeView, alias:'home'
-      },
-      {
-        path: '/user',
-        name:'user',
-        children:[
-            {path:'login', name:'login', component: LoginView},
-            {path:'register', name:'register', component: RegisterView},
-            {path:'profile', name:'profile', component: UserView}
-        ]
-      },
-          {
-              path:'/cart',
+      children:[
+          {path:'', redirect:'home', meta: {requiresAuth: false}},
+          {path:'home', name:'home', component:HomeView, meta: {requiresAuth: false}},
+          {path: '/user', name:'user',
               children:[
-                  {path:'', name:'cart', component: CartView}
-              ]
-          },
-          {
-              path:'/product',
+                {path:'login', name:'login', component: LoginView, meta: {requiresAuth: false}},
+                {path:'register', name:'register', component: RegisterView, meta: {requiresAuth: false}},
+                {path:'profile', name:'profile', component: UserView, meta: {requiresAuth: true}}]},
+          {path:'/cart', name:'cart', component: CartView, meta: {requiresAuth: true}},
+          {path:'/product',
               children:[
-                  {path:'create',name:'createProduct', component: createProductView},
-                  {path: ':id/edit', name: 'editeProduct', component: editProductView},
-                  {path:':id',name:'products', component: ProductView}
-              ]
-          },
-          {
-            path: "search", name:'search', component: SearchView
-          },
-          {
-              path: "/:notFound",
-              component: NotFound,
-          },
+                  {path:'create',name:'createProduct', component: createProductView, meta: {requiresAuth: true}},
+                  {path: ':id/edit', name: 'editeProduct', component: editProductView, meta: {requiresAuth: true}},
+                  {path:':id',name:'products', component: ProductView ,meta: {requiresAuth: false}}]},
+          {path: "search", name:'search', component: SearchView, meta: {requiresAuth: false}},
+          {path: "/:notFound", component: NotFound, meta: {requiresAuth: false}}
       ]
     }]
 })
+router.beforeEach((to, from, next) => {
+    if (to.meta.requiresAuth) {
+        const token = localStorage.getItem('token');
+        if (token) {
+            next();
+        } else {
+            next('/user/login');
+        }
+    } else {
+        next();
+    }
+});
 
 export default router

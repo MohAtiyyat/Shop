@@ -38,15 +38,6 @@ class AuthController extends Controller
     {
         try {
             $user = User::create($request->validated());
-
-            if($user->id==1){
-                $role = Role::where('name', 'admin')->first();
-                $user->syncRoles($role);
-            }
-            else {
-                $role = Role::where('name', 'user')->first();
-                $user->syncRoles($role);
-            }
             auth()->login($user);
             Cart::create(['user_id' => $user->id]);
             return response()->json(['token' => auth()->user()->createToken('token-name')->plainTextToken, 'userId'=> auth()->user()->id, 'userName'=> auth()->user()->name, 'userEmail'=> auth()->user()->email, 'role'=> auth()->user()->getRoleNames()[0]]);

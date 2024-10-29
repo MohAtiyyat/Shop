@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Spatie\Permission\Models\Role;
 
 class LoginRequest extends FormRequest
 {

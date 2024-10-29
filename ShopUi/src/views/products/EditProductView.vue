@@ -2,6 +2,7 @@
 import axios from "axios";
 import productView from "./ProductView.vue";
 import FormLayout from "@/layout/FormLayout.vue"
+import Layout from "@/layout/Layout.vue";
 
 export default {
   name:"UpdateProductView",
@@ -10,7 +11,7 @@ export default {
       return productView
     }
   },
-  components: {FormLayout},
+  components: {FormLayout, Layout},
   data(){
     return {
       product:[],
@@ -19,7 +20,11 @@ export default {
         'description': '',
         'price':''
       },
-      errorMsg: '',
+      errors:{
+        'name':null,
+        'description':null,
+        'price':null
+      },
       redirect: '/home'
     }
   },
@@ -36,7 +41,7 @@ export default {
           'Content-Type': 'application/json',
         },
       };
-      axios.get(`http://127.0.0.1:8000/api/product/${id}`,
+      axios.get(`/product/${id}`,
           config
       ).then((response) => {
         this.formData = response.data;
@@ -63,11 +68,22 @@ export default {
           .then(() => {
             window.location.href = '/home';
             alert("product edited")
-          }).catch(errors => {
-        errors = errors.response.data.errors;
-        for (const error in errors) {
-          console.log(errors[error])
-        }
+          }).catch(errs => {
+        const errors = errs.response.data.errors;
+            if(errs.status === 422) {
+              if (errors.name !== undefined) {
+                this.errors.name = errors.name[0];
+              }
+              if (errors.description !== undefined) {
+                this.errors.description = errors.description[0];
+              }
+              if (errors.price !== undefined) {
+                this.errors.price = errors.price[0];
+              }
+            }
+            else {
+              console.log(errs)
+            }
       });
     },
     cancel(){
@@ -80,6 +96,7 @@ export default {
 </script>
 
 <template>
+  <Layout>
   <FormLayout name="login">
     <template #formBody>
       <form class="space-y-6">
@@ -88,6 +105,9 @@ export default {
           <div class="mt-2">
             <input id="productName" name="productName" type="text" required="" v-model="formData.name"
                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert" v-if="errors.name">
+              <span class="block sm:inline">{{errors.name}}</span>
+            </div>
           </div>
         </div>
 
@@ -100,6 +120,9 @@ export default {
             <textarea id="productDescription" name="productDescription" v-model="formData.description"
                       class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
           </div>
+          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert" v-if="errors.description">
+            <span class="block sm:inline">{{errors.description}}</span>
+          </div>
         </div>
         <div>
           <label for="productPrice" class="block text-sm font-medium leading-6 text-gray-900">Product price</label>
@@ -107,6 +130,9 @@ export default {
           <div class="mt-2">
             <input id="productPrice" name="productPrice" type="number" required="" v-model="formData.price" min="1"
                    class="block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert" v-if="errors.price">
+              <span class="block sm:inline">{{errors.price}}</span>
+            </div>
           </div>
         </div>
 
@@ -117,7 +143,7 @@ export default {
       </form>
     </template>
   </FormLayout>
-
+  </Layout>
 </template>
 
 <style scoped>

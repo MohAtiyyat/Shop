@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreProductsRequest extends FormRequest
+class DeleteProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,12 +22,10 @@ class StoreProductsRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules($id): array
     {
         return [
-            'name' => 'required|string|unique:products|max:255',
-            'description' => 'required|string|max:255',
-            'price' => 'required|numeric|min:1',
+            $id5y3
         ];
     }
 }
