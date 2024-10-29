@@ -59,6 +59,7 @@ export default {
       }
     },
     searchPar(){
+      localStorage.setItem('search', this.search)
       window.location.replace(`/search?search=${this.search}`);
     }
   }

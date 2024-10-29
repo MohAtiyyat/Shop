@@ -32,7 +32,6 @@ export default {
         this.products = response.data.products
         this.totalQuantity = response.data.totalQuantity
         this.totalPrice = response.data.totalPrice
-        console.log(this.products)
       })
           .catch(errors => {
             errors = errors.response.data.errors;
@@ -41,7 +40,7 @@ export default {
             }
           })
     },
-    quantityDec(btn){
+    async quantityDec(id, quantity){
       try {
         const config = {
           headers: {
@@ -49,28 +48,26 @@ export default {
             'Content-Type': 'application/json',
           },
         };
-        axios.put('/cart/update',
+        await axios.put('/cart/update',
             {
-              'product_id': parseInt(btn.target.id),
-              'quantity': parseInt(btn.target.value) - 1
+              'product_id': parseInt(id),
+              'quantity': parseInt(quantity) - 1
             },
             config
         ).then((response) => {
           this.msg = response.data;
-          location.reload();
+          this.getProducts();
         }).catch(errors => {
           this.pstErrMsg = errors.response.data.errors;
           for (const error in errors) {
             console.log(errors[error])
           }
         });
-
-        console.log(btn.target.value)
       }catch (e) {
         console.log(e)
       }
     },
-    quantityInc(btn){
+    async quantityInc(id, quantity){
       try {
         const config = {
           headers: {
@@ -78,15 +75,15 @@ export default {
             'Content-Type': 'application/json',
           },
         };
-        axios.put('/cart/update',
+         await axios.put('/cart/update',
             {
-              'product_id': parseInt(btn.target.id),
-              'quantity': parseInt(btn.target.value) +1
+              'product_id': id,
+              'quantity': parseInt( quantity +1)
             },
             config
         ).then((response) => {
           this.msg = response.data;
-          location.reload();
+          this.getProducts();
         }).catch(errors => {
           this.pstErrMsg = errors.response.data.errors;
           for (const error in errors) {
@@ -94,28 +91,9 @@ export default {
           }
         });
       }catch (e) {
+        console.log(btn.target.id, btn.target.value)
         console.log(e)
-      }    },
-    removeFromCart(){const config = {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json',
-      },
-    };
-      const productId = document.getElementById("removeBtn").value
-      axios.put('/cart/update',
-          {'product_id': `${productId}`,
-            'quantity': 0},
-          config
-      ).then((response) => {
-        this.msg = response.data;
-        location.reload();
-      }).catch(errors => {
-        this.pstErrMsg = errors.response.data.errors;
-        for (const error in errors) {
-          console.log(errors[error])
-        }
-      });
+      }
     },
   }
 }
@@ -148,7 +126,7 @@ export default {
           <div
               class="flex items-center flex-col min-[550px]:flex-row w-full max-xl:max-w-xl max-xl:mx-auto gap-2">
             <div class="flex items-center w-1/4 h-1/4 mx-auto justify-center">
-              <button @click.prevent="quantityDec($event)" :id='product.id' :value='product.pivot.quantity '
+              <button @click.prevent="quantityDec(product.id, product.pivot.quantity)"
                   class="group rounded-l-full px-6 py-[18px] border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:shadow-gray-200 hover:border-gray-300 hover:bg-gray-50">
                 <svg class="stroke-gray-900 transition-all duration-500 group-hover:stroke-black"
                      xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"
@@ -160,10 +138,10 @@ export default {
                         stroke-linecap="round" />
                 </svg>
               </button>
-              <input type="text"
+              <input type="text" readonly
                      class="border-y border-gray-200 outline-none text-gray-900 font-semibold text-lg w-full max-w-[118px] min-w-[80px] placeholder:text-gray-900 py-[15px] text-center bg-transparent"
                      :placeholder='product.pivot.quantity'>
-              <button @click.prevent="quantityInc($event)" :id='product.id' :value='product.pivot.quantity '
+              <button @click.prevent="quantityInc(product.id, product.pivot.quantity)"
                   class="group rounded-r-full px-6 py-[18px] border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:shadow-gray-200 hover:border-gray-300 hover:bg-gray-50">
                 <svg class="stroke-gray-900 transition-all duration-500 group-hover:stroke-black"
                      xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"
