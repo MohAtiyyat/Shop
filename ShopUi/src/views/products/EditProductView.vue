@@ -32,7 +32,7 @@ export default {
     this.getProduct();
   },
   methods: {
-    getProduct(){
+    async getProduct(){
       const pathArray = window.location.pathname.split('/');
       const id = pathArray[2]
       const config = {
@@ -41,7 +41,7 @@ export default {
           'Content-Type': 'application/json',
         },
       };
-      axios.get(`/product/${id}`,
+      await axios.get(`/product/${id}`,
           config
       ).then((response) => {
         this.formData = response.data;
@@ -52,7 +52,7 @@ export default {
         }
       });
     },
-    save() {
+    async save() {
       const pathArray = window.location.pathname.split('/');
       const id = pathArray[2]
       const config = {
@@ -61,7 +61,7 @@ export default {
           'Content-Type': 'application/json',
         },
       };
-      axios.put(`http://127.0.0.1:8000/api/product/${id}/update`,
+      await axios.put(`http://127.0.0.1:8000/api/product/${id}/update`,
           this.formData,
           config
       )

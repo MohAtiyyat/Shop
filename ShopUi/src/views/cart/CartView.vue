@@ -19,14 +19,14 @@ export default {
   },
 
   methods:{
-    getProducts(){
+    async getProducts(){
       const config = {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json',
         },
       };
-      axios.get('/cart',
+      await axios.get('/cart',
       config).
       then((response) =>{
         this.products = response.data.products

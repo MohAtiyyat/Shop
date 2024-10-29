@@ -20,8 +20,8 @@ export default {
     }
   },
   methods:{
-    login() {
-        axios.post("/user/login",
+    async login() {
+        await axios.post("/user/login",
             this.formData
         )
             .then((response) => {

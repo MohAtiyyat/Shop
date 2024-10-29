@@ -22,7 +22,7 @@ export default {
     }
   },
   methods: {
-    create() {
+    async create() {
       const config = {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -30,7 +30,7 @@ export default {
         },
       };
       console.log(config)
-      axios.post("/product/create",
+      await axios.post("/product/create",
           this.formData,
           config
       )

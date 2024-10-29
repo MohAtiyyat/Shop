@@ -85,8 +85,8 @@ export default {
     }
   },
   methods: {
-    register() {
-      axios.post("/user/register",
+    async register() {
+      await axios.post("/user/register",
           this.formData
       )
           .then((response) => {

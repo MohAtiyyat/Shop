@@ -24,7 +24,7 @@ export default {
     }
   },
   methods: {
-    getProduct() {
+    async getProduct() {
       const pathArray = window.location.pathname.split('/');
       const id = pathArray[2];
       const config = {
@@ -32,7 +32,7 @@ export default {
           'Content-Type': 'application/json',
         },
       };
-      axios.get(`/product/${id}`,
+      await axios.get(`/product/${id}`,
           config
       )
           .then((response) => {
@@ -44,14 +44,14 @@ export default {
         }
       });
     },
-    addToCart(){
+    async addToCart(){
       const config = {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json',
         },
       };
-      axios.put('/cart/update',
+      await axios.put('/cart/update',
           {'product_id': `${this.product.id}`,
           'quantity': 1},
           config
@@ -68,7 +68,7 @@ export default {
     back(){
       window.history.back();
     },
-    deleteProduct(){
+    async deleteProduct(){
       const pathArray = window.location.pathname.split('/');
       const id = pathArray[2]
       console.log(id);
@@ -79,7 +79,7 @@ export default {
         },
       };
       console.log(config)
-      axios.delete(`/product/${id}/delete`,
+      await axios.delete(`/product/${id}/delete`,
           config
       ).then((res) => {
         alert(res.data.message)

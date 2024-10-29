@@ -18,9 +18,9 @@
       },
 
       methods:{
-        getProducts(){
+        async getProducts(){
           const search =this.$route.query.search;
-          axios.get(`/product/search?search=${search}`)
+          await axios.get(`/product/search?search=${search}`)
               .then((response) =>{
                 this.products = response.data;
                 this.resLen = response.data.length;
