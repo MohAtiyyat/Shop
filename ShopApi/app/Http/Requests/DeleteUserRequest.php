@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DeleteProductRequest extends FormRequest
+class DeleteUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        if(auth()->user()->hasRole('admin')){
+        if(auth()->user()->hasRole('admin')) {
             return true;
         }
         return false;
@@ -25,11 +25,11 @@ class DeleteProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-
+            //
         ];
     }
-    public function getProductId(): int
+    public function getUserId(): int
     {
-        return (int) $this->input('product_id');
+        return (int) $this->input('user_id');
     }
 }

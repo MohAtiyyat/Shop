@@ -37,6 +37,7 @@ export default {
       )
           .then((response) => {
             this.product = response.data;
+            this.product.quantity = 1;
           }).catch(errors => {
         this.errorMsg = errors.response.data.errors;
         for (const error in errors) {
@@ -53,7 +54,7 @@ export default {
       };
       await axios.put('/cart/update',
           {'product_id': `${this.product.id}`,
-          'quantity': 1},
+          'quantity':`${this.product.quantity}` },
           config
       ).then((response) => {
         this.msg = response.data;
@@ -75,7 +76,6 @@ export default {
           'Content-Type': 'application/json',
         },
       };
-      console.log(config)
       await axios.delete(`/product/${this.product.id}/delete`,
           config
       ).then((res) => {
@@ -88,7 +88,21 @@ export default {
           console.log(errors[error])
         }
       });
-    }
+    },
+    quantityDec(quantity){
+      try {
+        this.product.quantity = parseInt(quantity - 1)
+      }catch (e) {
+        console.log(e)
+      }
+    },
+    quantityInc(quantity){
+      try {
+        this.product.quantity = parseInt(quantity + 1)
+      }catch (e) {
+        console.log(e)
+      }
+    },
   }
 }
 
@@ -120,6 +134,38 @@ export default {
               ${{product.price/100}}
             </p>
           </div>
+        <div>
+          <div class="flex items-center w-1/4 h-1/4 mx-auto justify-center">
+            <button @click.prevent="quantityDec(product.quantity)"
+                    class="group rounded-l-full px-6 py-[18px] border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:shadow-gray-200 hover:border-gray-300 hover:bg-gray-50">
+              <svg class="stroke-gray-900 transition-all duration-500 group-hover:stroke-black"
+                   xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"
+                   fill="none">
+                <path d="M16.5 11H5.5" stroke="" stroke-width="1.6" stroke-linecap="round" />
+                <path d="M16.5 11H5.5" stroke="" stroke-opacity="0.2" stroke-width="1.6"
+                      stroke-linecap="round" />
+                <path d="M16.5 11H5.5" stroke="" stroke-opacity="0.2" stroke-width="1.6"
+                      stroke-linecap="round" />
+              </svg>
+            </button>
+            <input type="text" readonly
+                   class="border-y border-gray-200 outline-none text-gray-900 font-semibold text-lg w-full max-w-[118px] min-w-[80px] placeholder:text-gray-900 py-[15px] text-center bg-transparent"
+                   :placeholder='product.quantity'>
+            <button @click.prevent="quantityInc( product.quantity)"
+                    class="group rounded-r-full px-6 py-[18px] border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:shadow-gray-200 hover:border-gray-300 hover:bg-gray-50">
+              <svg class="stroke-gray-900 transition-all duration-500 group-hover:stroke-black"
+                   xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"
+                   fill="none">
+                <path d="M11 5.5V16.5M16.5 11H5.5" stroke="" stroke-width="1.6"
+                      stroke-linecap="round" />
+                <path d="M11 5.5V16.5M16.5 11H5.5" stroke="" stroke-opacity="0.2" stroke-width="1.6"
+                      stroke-linecap="round" />
+                <path d="M11 5.5V16.5M16.5 11H5.5" stroke="" stroke-opacity="0.2" stroke-width="1.6"
+                      stroke-linecap="round" />
+              </svg>
+            </button>
+          </div>
+        </div>
 
         <div class="flex md:space-x-32">
           <button type="submit" @click.prevent="addToCart()" v-show="user.id != null" class="flex w-1/3 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-200 shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add to cart</button>

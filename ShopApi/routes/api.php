@@ -8,7 +8,6 @@ Route::controller(\App\Http\Controllers\AuthController::class)->prefix('user')->
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', 'logout');
     });
-
     Route::post('/login', 'login');
     Route::post('/register', 'register');
 });
@@ -32,6 +31,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/create', 'store');
         Route::put('{id}/update', 'update');
         Route::delete('{id}/delete', 'delete');
+    });
+    Route::get('/users',[\App\Http\Controllers\UsersController::class,'index']);
+    Route::controller(\App\Http\Controllers\UsersController::class)->prefix('user')->group(function () {
+
+        Route::put('{id}/update', 'update');
+        Route::delete('{id}/delete', 'delete');
+        Route::get('/{id}/cart', 'cartShow');
+        Route::get('/{id}', 'show');
     });
 });
 

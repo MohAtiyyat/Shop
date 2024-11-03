@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Cart extends Model
 {
-    use HasFactory;
+    use HasFactory, softDeletes;
 
     protected $table = 'carts';
     protected $fillable = [
@@ -23,7 +24,7 @@ class Cart extends Model
     }
     public function product(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class)->withPivot('quantity')->withTimestamps();
+        return $this->belongsToMany(Product::class)->withPivot('quantity','purchased_at')->withTimestamps();
     }
 }
 

@@ -8,7 +8,6 @@ use App\Models\Product;
 use App\Http\Requests\StoreProductsRequest;
 use App\Http\Requests\UpdateProductsRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class ProductsController extends Controller
 {
@@ -90,7 +89,7 @@ class ProductsController extends Controller
         if(auth()->user()->hasRole('admin')) {
             try {
                 $product = Product::find($id);
-                $product->delete();
+                $product->softdelete();
                 return response()->json([
                     'message' => 'Product deleted successfully.'
                 ]);

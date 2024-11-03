@@ -117,8 +117,8 @@ export default {
           <div
               class="flex items-center flex-col min-[550px]:flex-row gap-3 min-[550px]:gap-6 w-full max-xl:justify-center max-xl:max-w-xl max-xl:mx-auto">
             <div class="pro-data w-full max-w-sm ">
-              <h5 class="font-semibold text-xl leading-8 text-black max-[550px]:text-center">{{product.name}}
-              </h5>
+              <router-link :to="{path: '/product/' + product.id}" class="font-semibold text-xl leading-8 text-black max-[550px]:text-center">{{product.name}}
+              </router-link>
               <br>
               <h6 class="font-medium text-lg leading-8 text-indigo-600  max-[550px]:text-center">${{product.price/100}}</h6>
             </div>

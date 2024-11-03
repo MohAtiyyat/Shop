@@ -20,7 +20,7 @@ export default {
       currentPage: 1,
       totalPages: 0,
       rqPage:'',
-      search:'',
+      search:null,
       user:{
         id:localStorage.getItem('userId'),
         name:localStorage.getItem('userName'),
@@ -38,6 +38,7 @@ export default {
   },
   methods:{
     async getProducts(page = this.currentPage){
+      try {
       await axios.get(`/product?page=${page}`).
       then((response) =>{
         this.products = response.data.data
@@ -47,6 +48,9 @@ export default {
           .catch(() =>{
             this.errorMsg = 'Error retrieving data'
           })
+    }catch (e){
+        console.log(e);
+      }
     },
      previous() {
       if (this.currentPage > 1) {
@@ -58,9 +62,25 @@ export default {
         this.currentPage = this.currentPage + 1;
       }
     },
-    searchPar(){
-      localStorage.setItem('search', this.search)
-      window.location.replace(`/search?search=${this.search}`);
+    async searchBar(){
+      try{
+      const search =this.search;
+      if(search === null){
+        this.getProducts();
+      }else {
+      await axios.get(`/product/search?search=${search}`)
+          .then((response) =>{
+            this.products = response.data;
+          }).catch(errors => {
+            errors = errors.response.data.errors;
+            for (const error in errors) {
+              console.log(errors[error])
+            }
+          });
+      }
+    }catch (e){
+        console.log(e);
+      }
     }
   }
 }
@@ -86,15 +106,14 @@ export default {
             </svg>
           </div>
           <input type="search" name="search" v-model="search" id="search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search " required />
-          <button type="submit" @click.prevent="searchPar()" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
+          <button type="submit" @click.prevent="searchBar()" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
         </div>
       </form>
     </template>
     <div class="mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4"  >
       <Card v-for="product in products" :key="product.id" :productId="product.id" :productName="product.name" :productPrice="product.price"/>
     </div>
-    <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-      <div v-show=" (totalPages>1)">
+    <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between" v-show=" (totalPages>1) && search === null ">
         <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
           <button @click="previous" class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
             <span class="sr-only">Previous</span>
@@ -106,8 +125,6 @@ export default {
             <ChevronRightIcon class="h-5 w-5" aria-hidden="true" />
           </button>
         </nav>
-      </div>
-
     </div>
   </Layout>
 </template>

@@ -8,7 +8,10 @@ import createProductView from "@/views/products/CreateProductView.vue";
 import editProductView from "@/views/products/EditProductView.vue";
 import NotFound from "@/views/NotFound.vue";
 import SearchView from "@/views/SearchView.vue";
+import ProfileView from "@/views/users/ProfileView.vue";
 import UserView from "@/views/users/UserView.vue";
+import UsersView from "@/views/users/UsersView.vue";
+import UserCartView from "@/views/users/UserCartView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,11 +20,15 @@ const router = createRouter({
       children:[
           {path:'', redirect:'home', meta: {requiresAuth: false}},
           {path:'home', name:'home', component:HomeView, meta: {requiresAuth: false}},
-          {path: '/user', name:'user',
+          {path: '/user',
               children:[
                 {path:'login', name:'login', component: LoginView, meta: {requiresAuth: false}},
                 {path:'register', name:'register', component: RegisterView, meta: {requiresAuth: false}},
-                {path:'profile', name:'profile', component: UserView, meta: {requiresAuth: true}}]},
+                {path:'profile', name:'profile', component: ProfileView, meta: {requiresAuth: true}},
+                {path: ':id', name: 'user',component: UserView, meta: {requiresAuth: true}},
+                {path: ':id/cart', name: 'userCart', component: UserCartView, meta: {requiresAuth: true} }
+              ]},
+          {path:'/users', name:'users', component: UsersView, meta: {requiresAuth: true}},
           {path:'/cart', name:'cart', component: CartView, meta: {requiresAuth: true}},
           {path:'/product',
               children:[
@@ -33,7 +40,7 @@ const router = createRouter({
       ]
     }]
 })
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     if (to.meta.requiresAuth) {
         const token = localStorage.getItem('token');
         if (token) {

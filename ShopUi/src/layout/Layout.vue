@@ -48,10 +48,12 @@ import { Disclosure } from '@headlessui/vue'
 import SearchBar from "@/components/SearchBar.vue";
 const user = [localStorage.getItem('userName'),
 localStorage.getItem('userId'),
-localStorage.getItem('userEmail')]
+localStorage.getItem('userEmail'),
+localStorage.getItem('role')]
 const navigation = [
   { name: 'Home', href: '/home', show: true, currentPage: true},
   { name: 'Cart', href: '/cart', show: user[0] != null, currentPage: false},
+  { name: 'Users', href: '/users', show: user[3] === 'admin', currentPage: false}
 
 ]
 const userNavigation = [
