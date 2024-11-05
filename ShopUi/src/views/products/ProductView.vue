@@ -10,6 +10,9 @@ export default {
   components: { Layout, FormLayout, Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot, ExclamationTriangleIcon},
   created() {
     this.getProduct();
+    if (localStorage.getItem("token") !== null) {
+      this.userCheck()
+    }
   },
   data(){
     return {
@@ -118,6 +121,31 @@ export default {
     },
     goToCart(){
       window.location.href = '/cart';
+    },
+    async userCheck() {
+
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+
+        },
+      };
+      await axios.get(`/user/profile`,
+          config
+      )
+          .then((response) => {
+            this.user.name = response.data.name;
+            this.user.email = response.data.email;
+          }).catch(errors => {
+            errors = errors.response;
+            if(errors.status === 401){
+              localStorage.clear()
+            }
+            for (let error in errors){
+              console.log(error.status + "  " + error.data.message)
+            }
+          })
     }
   }
 }
@@ -150,8 +178,7 @@ export default {
               ${{product.price/100}}
             </p>
           </div>
-        <div>
-          <div class="flex items-center w-1/4 h-1/4 mx-auto justify-center">
+          <div class="flex items-center w-1/4 h-1/4 mx-auto justify-center" v-show="user.id != null">
             <button @click.prevent="quantityDec(product.quantity)"
                     class="group rounded-l-full px-6 py-[18px] border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:shadow-gray-200 hover:border-gray-300 hover:bg-gray-50">
               <svg class="stroke-gray-900 transition-all duration-500 group-hover:stroke-black"
@@ -181,7 +208,6 @@ export default {
               </svg>
             </button>
           </div>
-        </div>
 
         <div class="flex md:space-x-32">
           <button type="submit" @click.prevent="addToCart()" v-show="user.id != null" class="flex w-1/3 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-200 shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add to cart</button>

@@ -23,7 +23,6 @@ class UserFactory extends Factory
         return ['name'=> 'admin',
             'email'=> 'admin@test.com',
             'password'=> 'testtest',
-            'created_at' => now(),
-            'updated_at' => now()];
+            ];
     }
 }

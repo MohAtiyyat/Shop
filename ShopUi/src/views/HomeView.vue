@@ -12,6 +12,8 @@ export default {
   components: {SearchBar, ChevronLeftIcon, Layout, ChevronRightIcon, Card},
   created() {
     this.getProducts()
+    if (localStorage.getItem("token") !== null) {    this.userCheck()
+    }
   },
   data(){
     return{
@@ -81,6 +83,31 @@ export default {
     }catch (e){
         console.log(e);
       }
+    },
+    async userCheck() {
+
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+
+        },
+      };
+      await axios.get(`/user/profile`,
+          config
+      )
+          .then((response) => {
+            this.user.name = response.data.name;
+            this.user.email = response.data.email;
+          }).catch(errors => {
+            errors = errors.response;
+            if(errors.status === 401){
+              localStorage.clear()
+            }
+            for (let error in errors){
+              console.log(error.status + "  " + error.data.message)
+            }
+          })
     }
   }
 }
