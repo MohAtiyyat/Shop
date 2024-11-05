@@ -46,11 +46,15 @@ export default {
       ).then((response) => {
         this.formData = response.data;
       }).catch(errors => {
-        errors = errors.response.data.errors;
-        for (const error in errors) {
-          console.log(errors[error])
-        }
-      });
+          errors = errors.response;
+          if(errors.status === 401){
+            localStorage.clear()
+            window.location.href = '/user/login';
+          }
+          for (let error in errors){
+            console.log(error.status + "  " + error.data.message)
+          }
+        })
     },
     async save() {
       const pathArray = window.location.pathname.split('/');

@@ -19,7 +19,7 @@ class UsersController extends Controller
                 return response()->json(User::paginate(12));
 
             } catch (\Exception $e) {
-                return response()->json($e->getMessage());
+                return response()->json(['error' => $e->getMessage()], 500);
             }
         }
         return response()->json(['error' => 'unauthentic.'], 403);
@@ -31,7 +31,7 @@ class UsersController extends Controller
                 $user = User::find($id);
                 return response()->json(['user'=>$user]);
             }catch (\Exception $e) {
-                return response()->json($e->getMessage());
+                return response()->json(['error' => $e->getMessage()], 500);
             }
         }
         return response()->json(['error' => 'unauthentic.'], 403);
@@ -40,10 +40,23 @@ class UsersController extends Controller
     {
         if(auth()->user()->hasRole('admin')) {
             try {
-                $user = User::find($id);
-                return response()->json($user->cart->product);
+                $cart = Cart::find($id);
+                return response()->json($cart->product);
             }catch (\Exception $e) {
-                return response()->json($e->getMessage());
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
+        }
+        return response()->json(['error' => 'unauthentic.'], 403);
+    }
+    public function carts($id): JsonResponse
+    {
+        if(auth()->user()->hasRole('admin')) {
+            try {
+                $user = User::find($id);
+                $cart = $user->cart->all()->toArray();
+                return response()->json($cart);
+            }catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()], 500);
             }
         }
         return response()->json(['error' => 'unauthentic.'], 403);
@@ -58,7 +71,7 @@ class UsersController extends Controller
                     'message' => 'User updated successfully.', 201
                 ]);
             }catch (\Exception $e){
-                return response()->json(['error' => $e->getMessage()]);
+                return response()->json(['error' => $e->getMessage()], 500);
             }
         }
         return response()->json(['error' => 'unauthentic.'], 403);

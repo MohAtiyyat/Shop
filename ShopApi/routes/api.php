@@ -7,6 +7,7 @@ Route::controller(\App\Http\Controllers\AuthController::class)->prefix('user')->
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', 'logout');
+        Route::get('/profile', 'profile');
     });
     Route::post('/login', 'login');
     Route::post('/register', 'register');
@@ -24,6 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('/', 'index');
         Route::put('/update', 'update');
+        Route::put('/buy', 'buy');
     });
 
 
@@ -35,9 +37,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users',[\App\Http\Controllers\UsersController::class,'index']);
     Route::controller(\App\Http\Controllers\UsersController::class)->prefix('user')->group(function () {
 
+        Route::get('/cart/{id}', 'cartShow');
         Route::put('{id}/update', 'update');
         Route::delete('{id}/delete', 'delete');
-        Route::get('/{id}/cart', 'cartShow');
+        Route::get('/{id}/carts', 'carts');
         Route::get('/{id}', 'show');
     });
 });

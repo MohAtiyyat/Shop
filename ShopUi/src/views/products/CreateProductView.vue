@@ -51,6 +51,10 @@ export default {
                 this.errors.price = errors.price[0];
               }
             }
+            else if(errs.status === 401){
+              localStorage.clear()
+              window.location.href = '/user/login';
+            }
             else {
               console.log(errs)
             }

@@ -2,15 +2,25 @@
 import FormLayout from "@/layout/FormLayout.vue";
 import axios from "axios";
 import Layout from "@/layout/Layout.vue";
+import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
 
 export default {
   name:'createProduct',
-  components: {Layout, FormLayout},
+  components: { Layout, FormLayout, Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot, ExclamationTriangleIcon},
   created() {
     this.getProduct();
   },
   data(){
     return {
+      open: false,
+      pop: {
+        head:'',
+        msg:'',
+        btn1:'',
+        btn2:'',
+        link:''
+      },
       token:'',
       msg:'',
       product:[],
@@ -57,10 +67,13 @@ export default {
           'quantity':`${this.product.quantity}` },
           config
       ).then((response) => {
-        this.msg = response.data;
-        alert('Product added')
+        this.open = true;
+        this.pop.head = "Product added to cart";
+        this.pop.btn1 = "Go to Cart";
+        this.pop.btn2 = "Ok";
+        this.pop.link = "/cart";
       }).catch(errors => {
-        this.pstErrMsg = errors.response.data.errors;
+        this.pstErrMsg = errors.response;
         for (const error in errors) {
           console.log(errors[error])
         }
@@ -103,6 +116,9 @@ export default {
         console.log(e)
       }
     },
+    goToCart(){
+      window.location.href = '/cart';
+    }
   }
 }
 
@@ -169,14 +185,46 @@ export default {
 
         <div class="flex md:space-x-32">
           <button type="submit" @click.prevent="addToCart()" v-show="user.id != null" class="flex w-1/3 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-200 shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add to cart</button>
-          <button type="submit" @click.prevent="back()" class="flex w-1/3 justify-center rounded-md bg-gray-200 px-3 py-1.5 text-sm font-semibold leading-6 text-indigo-600 shadow-sm hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Back</button>
+          <button type="submit" @click.prevent="back()" class="flex w-1/3 justify-center rounded-md bg-gray-300 px-3 py-1.5 text-sm font-semibold leading-6 text-indigo-600 shadow-sm hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Back</button>
         </div>
         <div class="flex md:space-x-52">
-          <router-link :to="{ path: product.id + '/edit' }" v-show="user.role ==='admin'" tag="button" class="lex  justify-center rounded-md bg-green-500 text-gray-200 px-3 py-1.5">Edit </router-link>
-          <button @click.prevent="deleteProduct()" v-show="user.role ==='admin'" class="flex  justify-center rounded-md bg-red-700 text-gray-200 px-3 py-1.5">Delete</button>
-
+          <router-link :to="{ path: product.id + '/edit' }" v-show="user.role ==='admin'" tag="button" class="lex  justify-center rounded-md bg-green-500 text-gray-200 hover:bg-green-400 px-3 py-1.5">Edit </router-link>
+          <button @click.prevent="deleteProduct()" v-show="user.role ==='admin'" class="flex  justify-center rounded-md bg-red-700 text-gray-200  hover:bg-red-600 px-3 py-1.5">Delete</button>
         </div>
       </form>
+
+<!--      pop up-->
+      <TransitionRoot as="template" :show="open">
+        <Dialog class="relative z-10" @close="open = false">
+          <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          </TransitionChild>
+
+          <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+              <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200" leave-from="opacity-100 translate-y-0 sm:scale-100" leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                <DialogPanel class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                  <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                      <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                        <DialogTitle as="h3" class="text-base font-semibold text-gray-900">{{pop.head}}</DialogTitle>
+                        <div class="mt-2">
+                          <p class="text-sm text-gray-500">{{pop.msg}}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                    <button type="button" class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-gray-200 shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto" @click="this.goToCart">{{pop.btn1}}</button>
+                    <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-gray-300 px-3 py-2 text-sm font-semibold text-indigo-600 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-200 sm:mt-0 sm:w-auto" @click="open = false" ref="cancelButtonRef">
+                      {{ pop.btn2 }}</button>
+                  </div>
+                </DialogPanel>
+              </TransitionChild>
+            </div>
+          </div>
+        </Dialog>
+      </TransitionRoot>
     </template>
   </FormLayout>
   </Layout>

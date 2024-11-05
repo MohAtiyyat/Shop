@@ -19,7 +19,7 @@ class ProductsController extends Controller
         try {
             return response()->json(Product::paginate(12));
         }catch (\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -35,7 +35,7 @@ class ProductsController extends Controller
                     'message' => 'Product created successfully.', 201
                 ]);
         }catch (\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -47,7 +47,7 @@ class ProductsController extends Controller
         try {
             return response()->json(Product::find($id));
         }catch (\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -61,7 +61,7 @@ class ProductsController extends Controller
                 return response()->json($product);
 
         }catch (\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -77,7 +77,7 @@ class ProductsController extends Controller
                 'message' => 'Product updated successfully.', 201
             ]);
         }catch (\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -94,7 +94,7 @@ class ProductsController extends Controller
                     'message' => 'Product deleted successfully.'
                 ]);
             } catch (\Exception $e) {
-                return response()->json(['error' => $e->getMessage()]);
+                return response()->json(['error' => $e->getMessage()], 500);
             }
         }
         return response()->json(['error' => 'You are not authorized to delete this product.'], 403);
@@ -106,7 +106,7 @@ class ProductsController extends Controller
             $results = Product::where('name', 'like', "%$search%")->get();
             return response()->json($results);
         }catch (\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 }

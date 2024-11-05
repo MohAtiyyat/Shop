@@ -1,19 +1,14 @@
 <script >
 import axios from "axios";
-import UserView from "./UserView.vue";
 import FormLayout from "@/layout/FormLayout.vue"
 import Layout from "@/layout/Layout.vue";
 
 export default {
   name:"UserView",
-  computed: {
-    UserView() {
-      return UserView
-    }
-  },
   components: {FormLayout, Layout},
   data(){
     return {
+      CUR: localStorage.getItem('role'),
       product:[],
       formData: {
         'name': '',
@@ -45,17 +40,20 @@ export default {
       ).then((response) => {
         this.formData = response.data.user;
       }).catch(errors => {
-        errors = errors.response.data.errors;
-        for (const error in errors) {
-          console.log(errors[error])
+        errors = errors.response;
+        if(errors.status === 401){
+          localStorage.clear()
+          window.location.href = '/user/login';
         }
-      });
+        for (let error in errors){
+          console.log(error.status + "  " + error.data.message)
+        }
+      })
     },
     async save() {
       const pathArray = window.location.pathname.split('/');
       const id = pathArray[2]
       console.log(this.formData)
-      // this.formData.banned =
       const config = {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -79,6 +77,9 @@ export default {
               if (errors.email !== undefined) {
                 this.errors.eamil = errors.email[0];
               }
+            }else if(errors.status === 401){
+              localStorage.clear()
+              window.location.href = '/user/login';
             }
             else {
               console.log(errs)
@@ -122,7 +123,7 @@ export default {
               <span class="block sm:inline">{{errors.email}}</span>
             </div>
           </div>
-          <div>
+          <div v-show="CUR !== 'admin'">
             <label for="productPrice" class="block text-sm font-medium leading-6 text-gray-900">ban</label>
 
             <div class="flex items-center mb-4">

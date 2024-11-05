@@ -12,6 +12,7 @@ import ProfileView from "@/views/users/ProfileView.vue";
 import UserView from "@/views/users/UserView.vue";
 import UsersView from "@/views/users/UsersView.vue";
 import UserCartView from "@/views/users/UserCartView.vue";
+import UserCartsView from "@/views/users/UserCartsView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,7 +27,8 @@ const router = createRouter({
                 {path:'register', name:'register', component: RegisterView, meta: {requiresAuth: false}},
                 {path:'profile', name:'profile', component: ProfileView, meta: {requiresAuth: true}},
                 {path: ':id', name: 'user',component: UserView, meta: {requiresAuth: true}},
-                {path: ':id/cart', name: 'userCart', component: UserCartView, meta: {requiresAuth: true} }
+                {path: ':id/carts', name: 'userCarts', component: UserCartsView, meta: {requiresAuth: true}},
+                {path: ':user/cart/:id', name: 'userCart', component: UserCartView, meta: {requiresAuth: true} }
               ]},
           {path:'/users', name:'users', component: UsersView, meta: {requiresAuth: true}},
           {path:'/cart', name:'cart', component: CartView, meta: {requiresAuth: true}},

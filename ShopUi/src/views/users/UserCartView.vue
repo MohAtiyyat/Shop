@@ -16,7 +16,7 @@ export default {
   methods:{
     async getProducts(){
       const pathArray = window.location.pathname.split('/');
-      const id = pathArray[2];
+      const id = pathArray[4];
       console.log(id)
       const config = {
         headers: {
@@ -24,18 +24,21 @@ export default {
           'Content-Type': 'application/json',
         },
       };
-      await axios.get(`/user/${id}/cart`,
+      await axios.get(`/user/cart/${id}`,
           config).
       then((response) =>{
         this.products = response.data
         console.log(response)
+      }).catch(errors => {
+        errors = errors.response;
+        if(errors.status === 401){
+          localStorage.clear()
+          window.location.href = '/user/login';
+        }
+        for (let error in errors){
+          console.log(error.status + "  " + error.data.message)
+        }
       })
-          .catch(errors => {
-            errors = errors.response.data.errors;
-            for (const error in errors) {
-              console.log(errors[error])
-            }
-          })
     },
     back(){
       window.history.back();
@@ -57,7 +60,6 @@ export default {
       </div>
       <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
         <p class="text-sm/6 text-gray-900">{{ product.price/100}}</p>
-        <p class="text-xs/5 text-gray-500">{{product.pivot.purchased_at !== null? "purchased at : " + product.pivot.purchased_at : "not purchased yet" }}</p>
       </div>
     </li>
   </ul>

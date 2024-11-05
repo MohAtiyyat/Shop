@@ -39,10 +39,16 @@ export default {
         this.users = response.data.data
         this.totalPages = response.data.total/response.data.per_page>0? Math.round(response.data.total/response.data.per_page) : 1 ;
         this.currentPage = page;
+      }).catch(errors => {
+        errors = errors.response;
+        if(errors.status === 401){
+          localStorage.clear()
+          window.location.href = '/user/login';
+        }
+        for (let error in errors){
+          console.log(error.status + "  " + error.data.message)
+        }
       })
-          .catch(() =>{
-            this.errorMsg = 'Error retrieving data'
-          })
     },
     previous() {
       if (this.currentPage > 1) {
@@ -72,7 +78,7 @@ export default {
         </div>
       </div>
       <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-        <router-link :to="{path: '/user/'+ user.id +'/cart'}">Cart</router-link>
+        <router-link :to="{path: '/user/'+ user.id +'/carts'}">Cart</router-link>
         <p v-if="user.banned ===1" class="mt-1 text-xs/5 text-gray-500">Banned</p>
       </div>
 

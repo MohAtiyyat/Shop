@@ -14,9 +14,31 @@ export default {
     this.getUser();
   },
   methods:{
-      getUser() {
-        this.user.name = localStorage.getItem('userName')
-        this.user.email = localStorage.getItem('userEmail')
+      async getUser() {
+
+          const config = {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+              'Content-Type': 'application/json',
+
+            },
+          };
+          await axios.get(`/user/profile`,
+              config
+          )
+              .then((response) => {
+                this.user.name = response.data.name;
+                this.user.email = response.data.email;
+              }).catch(errors => {
+                errors = errors.response;
+                if(errors.status === 401){
+                  localStorage.clear()
+                  window.location.href = '/user/login';
+                }
+                for (let error in errors){
+                  console.log(error.status + "  " + error.data.message)
+                }
+              })
       }
 }
 }

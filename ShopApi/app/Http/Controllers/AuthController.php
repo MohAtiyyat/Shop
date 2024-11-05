@@ -20,7 +20,7 @@ class AuthController extends Controller
             }
             return response()->json(['error' => 'Unauthorized'], 401);
         }catch (\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -29,8 +29,15 @@ class AuthController extends Controller
             auth()->user()->tokens()->delete();
             return response()->json(['message' => 'Logged out']);
         }catch (\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
+
+    }
+    public function profile():JsonResponse
+    {
+        $name = auth()->user()->name;
+        $email = auth()->user()->email;
+        return response()->json(['name' => $name, 'email' => $email]);
 
     }
 
@@ -42,7 +49,7 @@ class AuthController extends Controller
             Cart::create(['user_id' => $user->id]);
             return response()->json(['token' => auth()->user()->createToken('token-name')->plainTextToken, 'userId'=> auth()->user()->id, 'userName'=> auth()->user()->name, 'userEmail'=> auth()->user()->email, 'role'=> auth()->user()->getRoleNames()[0]]);
         }catch (\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 }

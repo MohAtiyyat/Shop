@@ -56,9 +56,6 @@ const navigation = [
   { name: 'Users', href: '/users', show: user[3] === 'admin', currentPage: false}
 
 ]
-const userNavigation = [
-  { name: 'Sign out' },
-]
 const authNavigation = [
   { name: 'login', href: '/user/login', currentPage: false },
   { name: 'register', href: '/user/register', currentPage: false }
@@ -78,11 +75,27 @@ export default {
     }
   },
   methods:{
-    logout(){
-      localStorage.clear();
-      axios.post("/user/logout");
-      window.location.href = '/home';
-    },
+    logout() {
+      try {
+        const config = {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json',
+          },
+        };
+        axios.post("user/logout",{}, config).catch(errors => {
+          this.pstErrMsg = errors.response.data.errors;
+          for (const error in errors) {
+            console.log(errors[error])
+          }
+        });
+        localStorage.clear();
+        window.location.href = '/home';
+      }catch (e) {
+        console.log(e)
+      }
+      }
+    ,
     currentPage(){
       const pathArray = window.location.pathname.split('/');
       this.currentP = pathArray[1];
