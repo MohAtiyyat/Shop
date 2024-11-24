@@ -18,11 +18,20 @@ class Cart extends Model
         'user_id',
     ];
 
+    protected function casts(): array
+    {
+        return ['created_at' => 'datetime:l, Y-m-d H:i'];
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
     public function product(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class)->WhereNull('carts.ordered_at')->withPivot('quantity')->withTimestamps();
+    }
+    public function productAll(): BelongsToMany
     {
         return $this->belongsToMany(Product::class)->withPivot('quantity')->withTimestamps();
     }

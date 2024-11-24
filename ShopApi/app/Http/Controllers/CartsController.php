@@ -16,10 +16,10 @@ class CartsController extends Controller
     {
         try {
             $user = auth()->user();
-            $cart = $user->cart->whereNull('carts.ordered_at')->latest()->first();
-            $totalQuantity = $cart->product->whereNull('carts.ordered_at')->sum('pivot.quantity');
+            $cart = $user->cart->latest()->first();//.....
+            $totalQuantity = $cart->product->sum('pivot.quantity');//....
             $totalPrice = 0;
-            foreach($cart->product->whereNull('carts.ordered_at')->toArray() as $product){
+            foreach($cart->product->toArray() as $product){//....
                 $totalPrice += $product['pivot']['quantity'] * $product['price'];
             }
             return response()->json(['products' => $cart->product, 'totalQuantity' => $totalQuantity, 'totalPrice' => $totalPrice]);
@@ -32,7 +32,7 @@ class CartsController extends Controller
     {
         try {
             $user = auth()->user();
-            $cart = $user->cart->whereNull('carts.ordered_at')->latest()->first();
+            $cart = $user->cart->latest()->first();//....
             $product = $cart->product()->where('product_id', $request['product_id']);
                 if($product->first() != null){
                     $quantity = $request['quantity'] + $product->first()->pivot->quantity;
@@ -58,7 +58,7 @@ class CartsController extends Controller
         try {
 
             $user = auth()->user();
-            $cart = $user->cart->whereNull('ordered_at')->latest()->first();
+            $cart = $user->cart->latest()->first();//.....
             $cart->ordered_at = date("Y-m-d H:i:s");
             $cart->save();
 

@@ -53,7 +53,7 @@ class UsersController extends Controller
         if(auth()->user()->hasRole('admin')) {
             try {
                 $user = User::find($id);
-                $cart = $user->cart->all()->toArray();
+                $cart = $user->cartAll->all()->toArray();//....
                 return response()->json($cart);
             }catch (\Exception $e) {
                 return response()->json(['error' => $e->getMessage()], 500);
@@ -81,7 +81,7 @@ class UsersController extends Controller
         if(auth()->user()->hasRole('admin')) {
             try {
                 $user = User::find($id);
-                $user->cart()->delete();
+                $user->cartAll()->delete();//....
                 $user->delete();
                 return response()->json([
                     'message' => 'User delete successfully.', 201

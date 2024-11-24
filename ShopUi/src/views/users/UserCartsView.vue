@@ -57,7 +57,7 @@
           </div>
         </div>
         <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-          <p class="text-sm/6 text-gray-900">created at: {{cart.created_at}}</p>
+          <p class="text-sm/6 text-gray-900">created at:<br> {{cart.created_at}}</p>
           <p class="text-xs/5 text-gray-500">{{cart.ordered_at !== null? "ordered at : " + cart.ordered_at : "not ordered yet" }}</p>
         </div>
       </li>

@@ -47,10 +47,16 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'created_at' => 'datetime',
         ];
     }
     public function cart(): HasOne
     {
+        return $this->hasOne(Cart::class)->whereNull('ordered_at');;
+    }
+    public function cartAll(): HasOne
+    {
+
         return $this->hasOne(Cart::class);
     }
 }
